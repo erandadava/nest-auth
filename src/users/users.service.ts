@@ -14,9 +14,7 @@ export class UsersService {
   ){}
 
   async create(createUserDto: CreateUserDto) {
-    const user = this.userRepository.create({
-      ...createUserDto
-    });
+    const user = this.userRepository.create({...createUserDto});
     
     await user.save();
 
@@ -27,8 +25,9 @@ export class UsersService {
   async findUsers(){
     return await this.userRepository.find();
   }
+
   // async showById(id: number): Promise<User> {
-  //   const user = await this.findById(id);
+  //   const user = await this.userRepository.findOne(id);
 
   //   delete user.password;
   //   return user;

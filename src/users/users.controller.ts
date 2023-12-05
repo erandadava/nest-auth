@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, HttpException, HttpStatus } from '@nestjs/common';
 
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/user.dto';
@@ -15,7 +15,12 @@ export class UsersController {
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+    try {      
+      const result = this.usersService.create(createUserDto);
+      return result;
+    } catch (error) {
+      throw new HttpException('User creation failed', HttpStatus  .INTERNAL_SERVER_ERROR);
+    }
   }
 
   // @Get(':id')
