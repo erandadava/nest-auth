@@ -1,7 +1,7 @@
-import { Controller, Get, Post, Body, Param, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, HttpException, HttpStatus, Put, Patch, Res, Delete } from '@nestjs/common';
 
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dtos/user.dto';
+import { CreateUserDto, UpdateUserDto } from './dtos/user.dto';
 import { Users } from './users..interface';
 
 @Controller('users')
@@ -14,17 +14,23 @@ export class UsersController {
   }
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    try {      
-      const result = this.usersService.create(createUserDto);
-      return result;
-    } catch (error) {
-      throw new HttpException('User creation failed', HttpStatus  .INTERNAL_SERVER_ERROR);
-    }
+  async create(@Body() createUserDto: CreateUserDto) {
+    return await this.usersService.create(createUserDto);
   }
 
-  // @Get(':id')
-  // show(@Param('id') id: string) {
-  //   return this.usersService.showById(+id);
-  // }
+  @Get(':id')
+  show(@Param('id') id: string) {
+    return this.usersService.showById(+id);
+  }
+
+
+  @Patch(':id')
+  async updateUser(@Param('id') id: number, @Body() data: UpdateUserDto) {
+    return this.usersService.updateUser(id, data);
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number): Promise<number> {
+    return this.usersService.deleteUser(id)
+  } 
 }

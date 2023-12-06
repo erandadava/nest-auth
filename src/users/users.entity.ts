@@ -1,6 +1,7 @@
 import {
     BaseEntity,
     BeforeInsert,
+    BeforeUpdate,
     Column,
     CreateDateColumn,
     Entity,
@@ -35,5 +36,14 @@ import {
   
     async validatePassword(password: string): Promise<boolean> {
       return bcrypt.compare(password, this.password);
+    }
+
+    @BeforeUpdate()
+    async hashPasswordOnUpdate() {
+      // Check if the password has changed before hashing
+      if (this.password) {
+        this.password = await bcrypt.hash(this.password, 8);
+      }
+      this.updatedAt = new Date();
     }
   }
